@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Farmacias 24 horas{% endblock %}
+
+{% block content %}
+
+  <div id="contenido" class="hero-unit">
+    Cargando...
+  </div>
+
+  <div id="noDisponible" class="alert alert-error" style="display:none">
+    <h4 class="alert-heading">Error</h4>
+    <p>Tu navegador no posee la característica de Geolocalización
+    necesaria para esta página.</p>
+  </div>
+
+  <div id="noPermitido" class="alert alert-warning" style="display:none">
+    <h4 class="alert-heading">Error</h4>
+    <p>Para utilizar este servicio debes permitir que esta página
+    conozca tu ubicación actual y luego recargar la página.</p>
+  </div>
+
+  <script type="text/javascript">
+
+  var locales;
+
+  function noDisponible(){
+    $("#contenido").hide();
+    $("#noDisponible").show();
+  }
+
+  function noPermitido(){
+    $("#contenido").hide();
+    $("#noPermitido").show();
+  }
+
+  function init(){
+    $.ajax({
+      type: 'GET',
+      url: '/list',
+      success: function(data){
+        locales = eval(data);
+        if (navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(geoubicar, noPermitido);
+        } else {
+          noDisponible();
+        }
+      }
+    });
+
+  }
+
+  function geoubicar(position){
+    ulat = position.coords.latitude;
+    ulng = position.coords.longitude;
+    imin = 0;
+    idis = 999;
+
+    for (i in locales){
+      ilat = locales[i].lat;
+      ilng = locales[i].lng;
+      dist = ((ilat-ulat)*(ilat-ulat))+((ilng-ulng)*(ilng-ulng));
+      if (dist < idis){ imin = i; idis = dist; }
+    }
+
+    msg = "<h2>Farmacia encontrada</h2>";
+    msg += "<p>Hoy, la farmacia de turno más cercana a tu posición ";
+    msg += "actual es <strong>" + locales[imin].nombre + "</strong>";
+    msg += ", ubicada en <strong>" + locales[imin].direccion + "</strong>.</p>";
+
+    $("#contenido").html(msg);
+  }
+
+
+  $(document).ready(init);
+  </script>
+
+{% endblock %}

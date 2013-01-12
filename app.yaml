@@ -1,0 +1,23 @@
+application: farmacias24horas
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /
+  script: controllers/index_controller.py
+
+- url: /add
+  script: controllers/index_controller.py
+
+- url: /list
+  script: controllers/index_controller.py
+
+- url: /assets
+  static_dir: public
+
+- url: /favicon\.ico
+  static_files: public/favicon.ico
+  upload: public/favicon.ico
+
+
