@@ -69,5 +69,8 @@ for f in de_turno:
         "&lng=" + urllib2.quote(str(f.get("lng")))
   print(url)
   opener = urllib2.build_opener()
-  page = opener.open(url)
+  try:
+    page = opener.open(url)
+  except:
+    print("ERROR al cargar %s\n" % url)
 

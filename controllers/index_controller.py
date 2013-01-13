@@ -17,7 +17,7 @@ class IndexController(BaseController):
 class AgregaDireccionController(BaseController):
     def get(self):
         direccion = Direccion()
-        direccion.nombre = self.request.get("nombre").encode("utf-8")
+        direccion.nombre = self.request.get("nombre") #.encode("utf-8")
         direccion.direccion = self.request.get("direccion")
         direccion.direccion_normalizada = self.request.get("direccion_normalizada")
         direccion.lat = float(self.request.get("lat"))
